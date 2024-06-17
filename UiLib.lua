@@ -1,40 +1,3 @@
---[[
-*****************************************************************
-  ____                       _          
- / ___| _ __   ___  ___  ___| |_ ___   
- \___ \| '_ \ / _ \/ _ \/ __| __/ __|  
-  ___) | |_) |  __/  __/ (__| |_\__ \_ 
- |____/| .__/ \___|\___|\___|\__|___(_)
-       |_|                              
-                                                  
-*****************************************************************
-WARNING: This script is protected by Sytex Obfuscator V1.09473.28 to safeguard proprietary algorithms and intellectual property.
-
-Unauthorized access, modification, or reverse-engineering of this script
-is strictly prohibited and may result in legal action.
-
-This script includes intricate design patterns and proprietary secrets critical 
-to the operation of the associated game or application.
-
-Access to this script is restricted to authorized developers only.
-Any attempt to tamper with or misuse this script will result in immediate consequences.
-
-By accessing or using this script, you acknowledge and agree to comply with these terms.
-
-Obfuscation Details:
-- Obfuscator: Sytex Obfuscator V1.09473.28
-- Techniques Used: Anti-tamper mechanisms, string encryption, control flow obfuscation.
-
-Anti-tamper measures have been implemented to prevent unauthorized modification 
-of this script's functionality. Decrypting or modifying protected portions of the script 
-may trigger security protocols leading to account termination or legal action.
-
-For inquiries regarding access or permissions, contact the script owner or administrator.
-
-*****************************************************************
-]]
-
-
 -- UI Library
 local UI = {}
 
@@ -95,16 +58,12 @@ function UI.AddWindow(title, titleColor, secondTitle, secondTitleColor)
 end
 
 function UI.AddTabs(parent)
-    local tabs = create("ScrollingFrame", {
+    local tabsContainer = create("Frame", {
         Size = UDim2.new(0.3, 0, 0.9, 0),
         Position = UDim2.new(0, 0, 0.1, 0),
         BackgroundColor3 = Color3.fromRGB(20, 20, 20),
         BorderColor3 = Color3.new(0, 0, 1),
         BorderSizePixel = 1,
-        Active = true,
-        CanvasSize = UDim2.new(0, 0, 5, 0),
-        ScrollBarThickness = 6,
-        ScrollBarImageColor3 = Color3.new(0, 0, 1),
         Parent = parent
     })
 
@@ -116,93 +75,118 @@ function UI.AddTabs(parent)
         TextSize = 23,
         TextColor3 = Color3.new(1, 1, 1),
         Font = Enum.Font.Code,
-        Parent = tabs
+        Parent = tabsContainer
     })
 
-    return tabs
+    local tabsScroll = create("ScrollingFrame", {
+        Size = UDim2.new(1, 0, 0.9, 0),
+        Position = UDim2.new(0, 0, 0.1, 0),
+        BackgroundColor3 = Color3.fromRGB(20, 20, 20),
+        BorderColor3 = Color3.new(0, 0, 1),
+        BorderSizePixel = 1,
+        ScrollBarThickness = 6,
+        Parent = tabsContainer
+    })
+
+    return tabsScroll
+end
+
+function UI.AddTabButton(tabsFrame, title, imageId)
+    local tabButton = create("TextButton", {
+        Size = UDim2.new(1, 0, 0, 30),
+        Position = UDim2.new(0, 0, 0, 30 * #tabsFrame:GetChildren()),
+        BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+        TextColor3 = Color3.new(1, 1, 1),
+        Text = title,
+        TextSize = 14,
+        Font = Enum.Font.Code,
+        Parent = tabsFrame
+    })
+
+    local uiCorner = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = tabButton })
+
+    if imageId then
+        local icon = create("ImageLabel", {
+            Size = UDim2.new(0, 20, 0, 20),
+            Position = UDim2.new(0, 5, 0.5, -10),
+            BackgroundTransparency = 1,
+            Image = "rbxassetid://" .. imageId,
+            Parent = tabButton
+        })
+    end
+
+    return tabButton
 end
 
 function UI.AddButton(parent, text, callback)
     local button = create("TextButton", {
-        Size = UDim2.new(0.8, 0, 0.05, 0),
-        Position = UDim2.new(0.1, 0, 0.1, 0),
-        BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+        Size = UDim2.new(0.4, 0, 0.1, 0),
+        Position = UDim2.new(0.3, 0, 0.3, 0),
+        BackgroundColor3 = Color3.fromRGB(0, 128, 255),
         TextColor3 = Color3.new(1, 1, 1),
         Text = text,
         TextSize = 14,
         Font = Enum.Font.Code,
         Parent = parent
     })
-    
+
     local uiCorner = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = button })
 
-    button.MouseButton1Click:Connect(callback)
+    button.MouseButton1Click:Connect(function()
+        callback()
+    end)
+
     return button
 end
 
-function UI.AddSlider(parent, min, max, callback)
+function UI.AddSlider(parent, minValue, maxValue, callback)
     local sliderFrame = create("Frame", {
-        Size = UDim2.new(0.8, 0, 0.05, 0),
-        Position = UDim2.new(0.1, 0, 0.2, 0),
+        Size = UDim2.new(0.4, 0, 0.05, 0),
+        Position = UDim2.new(0.3, 0, 0.5, 0),
         BackgroundColor3 = Color3.fromRGB(40, 40, 40),
         Parent = parent
     })
 
-    local uiCorner = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = sliderFrame })
-
     local slider = create("TextButton", {
-        Size = UDim2.new(0, 10, 1, 0),
-        BackgroundColor3 = Color3.new(0, 0, 1),
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundColor3 = Color3.fromRGB(0, 128, 255),
+        TextColor3 = Color3.new(1, 1, 1),
+        Text = "",
         Parent = sliderFrame
     })
 
-    local uiCornerSlider = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = slider })
-
-    local textBox = create("TextBox", {
-        Size = UDim2.new(0.2, 0, 1, 0),
-        Position = UDim2.new(1, 10, 0, 0),
-        BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+    local sliderValue = create("TextLabel", {
+        Position = UDim2.new(1, 5, 0, -7),
+        BackgroundTransparency = 1,
+        Text = minValue,
         TextColor3 = Color3.new(1, 1, 1),
-        Text = tostring(min),
         TextSize = 14,
         Font = Enum.Font.Code,
         Parent = sliderFrame
     })
 
-    local uiCornerTextBox = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = textBox })
+    local uiCorner = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = slider })
 
     local dragging = false
-    slider.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-        end
+    slider.MouseButton1Down:Connect(function()
+        dragging = true
     end)
 
-    slider.InputEnded:Connect(function(input)
+    parent.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
         end
     end)
 
-    sliderFrame.InputChanged:Connect(function(input)
+    parent.InputChanged:Connect(function(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local x = math.clamp(input.Position.X - sliderFrame.AbsolutePosition.X, 0, sliderFrame.AbsoluteSize.X)
-            slider.Position = UDim2.new(x / sliderFrame.AbsoluteSize.X, 0, 0, 0)
-            local value = math.floor((x / sliderFrame.AbsoluteSize.X) * (max - min) + min)
-            textBox.Text = tostring(value)
+            local mousePos = input.Position.X
+            local percent = (mousePos - slider.AbsolutePosition.X) / slider.AbsoluteSize.X
+            percent = math.clamp(percent, 0, 1)
+            local value = minValue + percent * (maxValue - minValue)
+            value = math.floor(value)
+            sliderValue.Text = value
             callback(value)
-        end
-    end)
-
-    textBox.FocusLost:Connect(function()
-        local value = tonumber(textBox.Text)
-        if value then
-            value = math.clamp(value, min, max)
-            local x = (value - min) / (max - min) * sliderFrame.AbsoluteSize.X
-            slider.Position = UDim2.new(x / sliderFrame.AbsoluteSize.X, 0, 0, 0)
-            callback(value)
-        else
-            textBox.Text = tostring(min)
         end
     end)
 
@@ -211,11 +195,10 @@ end
 
 function UI.AddTextbox(parent, callback)
     local textBox = create("TextBox", {
-        Size = UDim2.new(0.8, 0, 0.05, 0),
-        Position = UDim2.new(0.1, 0, 0.3, 0),
+        Size = UDim2.new(0.4, 0, 0.1, 0),
+        Position = UDim2.new(0.3, 0, 0.7, 0),
         BackgroundColor3 = Color3.fromRGB(40, 40, 40),
         TextColor3 = Color3.new(1, 1, 1),
-        Text = "",
         TextSize = 14,
         Font = Enum.Font.Code,
         Parent = parent
@@ -223,8 +206,10 @@ function UI.AddTextbox(parent, callback)
 
     local uiCorner = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = textBox })
 
-    textBox.FocusLost:Connect(function()
-        callback(textBox.Text)
+    textBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            callback(textBox.Text)
+        end
     end)
 
     return textBox
@@ -232,102 +217,92 @@ end
 
 function UI.AddSwitch(parent, callback)
     local switchFrame = create("Frame", {
-        Size = UDim2.new(0.8, 0, 0.05, 0),
-        Position = UDim2.new(0.1, 0, 0.4, 0),
+        Size = UDim2.new(0.4, 0, 0.1, 0),
+        Position = UDim2.new(0.3, 0, 0.5, 0),
         BackgroundColor3 = Color3.fromRGB(40, 40, 40),
         Parent = parent
     })
 
-    local uiCorner = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = switchFrame })
-
     local switchButton = create("TextButton", {
-        Size = UDim2.new(0.5, -1, 1, -1),
-        Position = UDim2.new(0, 1, 0, 1),
-        BackgroundColor3 = Color3.fromRGB(255, 0, 0),
-        Text = "OFF",
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         TextColor3 = Color3.new(1, 1, 1),
-        TextSize = 14,
-        Font = Enum.Font.Code,
+        Text = "",
+        Font = Enum.Font.SourceSans,
         Parent = switchFrame
     })
 
-    local uiCornerSwitch = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = switchButton })
+    local switchToggle = false
 
-    local on = false
     switchButton.MouseButton1Click:Connect(function()
-        on = not on
-        if on then
-            switchButton.Text = "ON"
-            switchButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        switchToggle = not switchToggle
+        if switchToggle then
+            switchButton.BackgroundColor3 = Color3.fromRGB(0, 128, 255)
         else
-            switchButton.Text = "OFF"
-            switchButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+            switchButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         end
-        callback(on)
+        callback(switchToggle)
     end)
 
     return switchFrame
 end
 
+-- Start of the UI.AddSelector function
+
 function UI.AddSelector(parent, options, callback)
     local selectorFrame = create("Frame", {
-        Size = UDim2.new(0.8, 0, 0.05, 0),
-        Position = UDim2.new(0.1, 0, 0.5, 0),
+        Size = UDim2.new(0.4, 0, 0.1, 0),
+        Position = UDim2.new(0.3, 0, 0.7, 0),
         BackgroundColor3 = Color3.fromRGB(40, 40, 40),
         Parent = parent
     })
 
-    local uiCorner = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = selectorFrame })
-
     local selectorButton = create("TextButton", {
-        Size = UDim2.new(1, -1, 1, -1),
-        Position = UDim2.new(0, 1, 0, 1),
-        BackgroundColor3 = Color3.fromRGB(0, 0, 255),
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         TextColor3 = Color3.new(1, 1, 1),
-        Text = options[1],
+        Text = options[1],  -- Default to first option
         TextSize = 14,
         Font = Enum.Font.Code,
         Parent = selectorFrame
     })
 
-    local uiCornerSelector = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = selectorButton })
+    local selectorDropdown = create("Frame", {
+        Position = UDim2.new(0, 0, 1, 0),
+        Size = UDim2.new(1, 0, 0, 100),
+        BackgroundColor3 = Color3.fromRGB(30, 30, 30),
+        BorderColor3 = Color3.new(0, 0, 0),
+        BorderSizePixel = 1,
+        Visible = false,
+        Parent = selectorButton
+    })
 
-    local open = false
-    local optionFrames = {}
+    local uiListLayout = create("UIListLayout", {
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Parent = selectorDropdown
+    })
 
-    selectorButton.MouseButton1Click:Connect(function()
-        open = not open
-        for _, frame in pairs(optionFrames) do
-            frame.Visible = open
-        end
-    end)
-
-    for i, option in ipairs(options) do
-        local optionFrame = create("TextButton", {
-            Size = UDim2.new(1, 0, 1, 0),
-            Position = UDim2.new(0, 0, i, 0),
+    for i, optionText in ipairs(options) do
+        local optionButton = create("TextButton", {
+            Size = UDim2.new(1, 0, 0, 30),
             BackgroundColor3 = Color3.fromRGB(40, 40, 40),
             TextColor3 = Color3.new(1, 1, 1),
-            Text = option,
+            Text = optionText,
             TextSize = 14,
             Font = Enum.Font.Code,
-            Visible = false,
-            Parent = selectorFrame
+            Parent = selectorDropdown
         })
 
-        local uiCornerOption = create("UICorner", { CornerRadius = UDim.new(0, 5), Parent = optionFrame })
-
-        optionFrame.MouseButton1Click:Connect(function()
-            selectorButton.Text = option
-            open = false
-            for _, frame in pairs(optionFrames) {
-                frame.Visible = false
-            end
-            callback(option)
+        optionButton.MouseButton1Click:Connect(function()
+            selectorButton.Text = optionText
+            callback(optionText, i)
+            selectorDropdown.Visible = false
         end)
-
-        table.insert(optionFrames, optionFrame)
     end
+
+    selectorButton.MouseButton1Click:Connect(function()
+        selectorDropdown.Visible = not selectorDropdown.Visible
+    end)
 
     return selectorFrame
 end
